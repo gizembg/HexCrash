@@ -5,8 +5,8 @@ using UnityEngine;
 public class Map : MonoBehaviour
 {
     public GameObject hexPrefab;
-    int width = 9;
-    int height = 8;
+    public int width = 9;
+    public int height = 8;
     float xOffset = 0.879f;
     float yOffset = 0.764f;
     public static List<Hex> hexagonList = new List<Hex>();

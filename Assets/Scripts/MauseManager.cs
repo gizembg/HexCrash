@@ -44,8 +44,11 @@ public class MauseManager : MonoBehaviour
     {
         foreach (Hex markedHex in selectedGroup)
         {
-            MeshRenderer mr2 = markedHex.GetComponentInChildren<MeshRenderer>();
-            Instantiate(MSelection, mr2.bounds.center, Quaternion.identity);
+            if (markedHex != null)
+            {
+                MeshRenderer mr2 = markedHex.GetComponentInChildren<MeshRenderer>();
+                Instantiate(MSelection, mr2.bounds.center, Quaternion.identity);
+            }
 
         }
 
