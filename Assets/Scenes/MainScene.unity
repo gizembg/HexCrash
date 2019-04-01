@@ -141,7 +141,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: f82ffc44729acc73d948f7f4b02278b7, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  MSelection: {fileID: 8676648805977657554, guid: 81cfbd5c2876d43708d43407b39fae63,
+  MSelection: {fileID: 8676648805977657554, guid: c4a69cbc283bcb3528937ca36e560c54,
     type: 3}
 --- !u!4 &1131546989
 Transform:
@@ -284,3 +284,5 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   hexPrefab: {fileID: 5507662024307831170, guid: acaa81eb519407a3aacc1499b666f7be,
     type: 3}
+  width: 9
+  height: 8

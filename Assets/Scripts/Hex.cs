@@ -54,7 +54,7 @@ public class Hex : MonoBehaviour
             Debug.Log("downLeftNeighbour: " + downLeftNeighbour);
             neighbours.Add("downLeftNeighbour", downLeftNeighbour);
 
-            Hex downRightNeighbour = x >= mapWidth - 1 ? null : GameObject.Find("Hex_" + (x) + "_" + (y + 1)).GetComponent<Hex>();
+            Hex downRightNeighbour = GameObject.Find("Hex_" + (x) + "_" + (y + 1)).GetComponent<Hex>();
             Debug.Log("downRightNeighbour: " + downRightNeighbour);
             neighbours.Add("downRightNeighbour", downRightNeighbour);
 
@@ -69,4 +69,5 @@ public class Hex : MonoBehaviour
 
         return neighbours;
     }
+
 }
