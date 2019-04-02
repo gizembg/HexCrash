@@ -193,7 +193,7 @@ Camera:
   m_Enabled: 1
   serializedVersion: 2
   m_ClearFlags: 1
-  m_BackGroundColor: {r: 0.05980777, g: 0.08791188, b: 0.13207549, a: 0}
+  m_BackGroundColor: {r: 0.20879315, g: 0.21180977, b: 0.21698111, a: 0}
   m_projectionMatrixMode: 1
   m_SensorSize: {x: 36, y: 24}
   m_LensShift: {x: 0, y: 0}
@@ -286,3 +286,9 @@ MonoBehaviour:
     type: 3}
   width: 9
   height: 8
+  color1: {r: 0, g: 0, b: 0, a: 0}
+  color2: {r: 0, g: 0, b: 0, a: 0}
+  color3: {r: 0, g: 0, b: 0, a: 0}
+  color4: {r: 0, g: 0, b: 0, a: 0}
+  color5: {r: 0, g: 0, b: 0, a: 0}
+  color: {r: 1, g: 1, b: 1, a: 1}
