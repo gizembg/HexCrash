@@ -8,6 +8,7 @@ public class MauseManager : MonoBehaviour
     public GameObject MSelection;
     private List<Hex> selectedGroup;
     private Hex selectedHexagon;
+    private GameObject cloneMarks;
     void Start()
     {
         selectedGroup = new List<Hex>();
@@ -36,14 +37,18 @@ public class MauseManager : MonoBehaviour
     void MouseOver_Hex(Hex hitObject)
     {
 
-
         if (Input.GetMouseButtonDown(0))
         {
+
+            //TODO: deselction errors
+            //deseceltObjects();
 
             selectedGroup.Clear();
             selectionRule(hitObject);
             markSelectedObjects();
+
         }
+
     }
 
     void markSelectedObjects()
@@ -53,8 +58,18 @@ public class MauseManager : MonoBehaviour
             if (markedHex != null)
             {
                 MeshRenderer mr2 = markedHex.GetComponentInChildren<MeshRenderer>();
-                Instantiate(MSelection, mr2.bounds.center, Quaternion.identity);
+                cloneMarks = Instantiate(MSelection, mr2.bounds.center, Quaternion.identity);
             }
+        }
+
+    }
+    private void deseceltObjects()
+    {
+        if (cloneMarks != null && cloneMarks.transform.childCount > 0)
+        {
+            foreach (Transform child in cloneMarks.transform)
+                Destroy(child.gameObject);
+
         }
 
     }
