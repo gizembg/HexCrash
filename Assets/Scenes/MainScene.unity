@@ -123,7 +123,7 @@ GameObject:
   - component: {fileID: 1131546989}
   - component: {fileID: 1131546988}
   m_Layer: 0
-  m_Name: ' MauseManager'
+  m_Name: " Mo\x13useManager"
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -286,9 +286,9 @@ MonoBehaviour:
     type: 3}
   width: 9
   height: 8
-  color1: {r: 0, g: 0, b: 0, a: 0}
-  color2: {r: 0, g: 0, b: 0, a: 0}
-  color3: {r: 0, g: 0, b: 0, a: 0}
-  color4: {r: 0, g: 0, b: 0, a: 0}
-  color5: {r: 0, g: 0, b: 0, a: 0}
-  color: {r: 1, g: 1, b: 1, a: 1}
+  colorCount: 3
+  color1: {r: 1, g: 0, b: 0, a: 1}
+  color2: {r: 1, g: 0.92156863, b: 0.015686275, a: 1}
+  color3: {r: 1, g: 0, b: 1, a: 1}
+  color4: {r: 0, g: 0, b: 1, a: 1}
+  color5: {r: 0, g: 1, b: 0, a: 1}

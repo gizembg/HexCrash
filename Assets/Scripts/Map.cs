@@ -11,7 +11,7 @@ public class Map : MonoBehaviour
     float yOffset = 0.764f;
     public static List<Hex> hexagonList = new List<Hex>();
     public int colorCount = 5;
-
+    private List<Color> colorList = new List<Color>();
     public Color color1 = Color.red;
     public Color color2 = Color.yellow;
     public Color color3 = Color.magenta;
@@ -20,15 +20,19 @@ public class Map : MonoBehaviour
 
 
     //private List<List<Hex>> hexGrid;
+    //TODO: Make color options logic on the editor
+    private void addColorToList(Color color)
+    {
+        colorList.Add(color);
 
+    }
     void Start()
     {
-        List<Color> colorList = new List<Color>();
-        colorList.Add(color1);
-        colorList.Add(color2);
-        colorList.Add(color3);
-        colorList.Add(color4);
-        colorList.Add(color5);
+        addColorToList(color1);
+        addColorToList(color2);
+        addColorToList(color3);
+        addColorToList(color4);
+        addColorToList(color5);
 
         for (int x = 0; x < width; x++)
         {
