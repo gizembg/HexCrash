@@ -9,9 +9,13 @@ public class MauseManager : MonoBehaviour
     private List<Hex> selectedGroup;
     private Hex selectedHexagon;
     private GameObject cloneMarks;
+    private static List<Hex> hexagonList;
+
     void Start()
     {
         selectedGroup = new List<Hex>();
+        hexagonList = Map.hexagonList;
+
     }
     void Update()
     {
@@ -177,8 +181,173 @@ public class MauseManager : MonoBehaviour
             Debug.Log("pos6");
 
         }
+        StartCoroutine(Rotation());
 
 
+    }
+
+
+    private IEnumerator Rotation() //Coroutine
+    {
+
+        List<Hex> matchedHexagons = null;
+        for (int i = 0; i < selectedGroup.Count; ++i)
+        {
+            swapHexagons(); //!explosiveHexagons
+            yield return new WaitForSeconds(0.01f);  //wait untill swapping completed.
+
+            matchedHexagons = checkExplosion(hexagonList);  //!checkexplosion()
+            // if (matchedHexagons.Count > ZERO)
+            // {
+            //     break; //stop if there is explosion
+            // }
+        }
+
+
+
+    }
+
+
+
+    private void swapHexagons()
+    {
+        Hex firstHex, secondHex, thirdHex;
+        Vector2 pos1, pos2, pos3;
+
+        firstHex = selectedGroup[0];
+        secondHex = selectedGroup[1];
+        thirdHex = selectedGroup[2];
+
+
+        pos1 = firstHex.transform.position;
+        pos2 = secondHex.transform.position;
+        pos3 = thirdHex.transform.position;
+
+
+        Debug.Log("pos1: " + pos1);
+        Debug.Log("pos2: " + pos2);
+        Debug.Log("pos3: " + pos3);
+
+
+
+        firstHex.transform.position = pos2;
+        secondHex.transform.position = pos3;
+        thirdHex.transform.position = pos1;
+
+        Debug.Log("Cpos1: " + pos1);
+        Debug.Log("Cpos2: " + pos2);
+        Debug.Log("Cpos3: " + pos3);
+
+
+
+    }
+
+
+
+
+
+    public static List<Hex> checkExplosion(List<Hex> hexagonList)
+    {
+        List<Hex> explosiveList = new List<Hex>();
+
+        // cube.GetComponent<MeshRenderer>().sharedMaterial.color = getColor(hex.neighbours["upNeighbour"]);
+
+        Color hexColor, upRightNeighbourColor, downRightNeighbourColor, downNeighbourColor, downLeftNeighbourColor, upLeftNeighbourColor, upNeighbourColor;
+
+
+
+        for (int i = 0; i < hexagonList.Count; ++i)
+        {
+
+            Hex hex = hexagonList[i];
+            hexColor = getColor(hexagonList[i]);
+            Debug.Log("!!!!!!!!!!!!!!!!!COLOR- hexColor" + hexColor);
+
+
+            Hex upRightNeighbour = hex.GetNeighbours()["upRightNeighbour"];
+            upRightNeighbourColor = getColor(upRightNeighbour);
+            Debug.Log("!!!!!!!!!!!!!!!!!COLOR- upRightNeighbourColor" + upRightNeighbourColor);
+
+
+
+            Hex downRightNeighbour = hex.GetNeighbours()["downRightNeighbour"];
+            downRightNeighbourColor = getColor(downRightNeighbour);
+            Debug.Log("!!!!!!!!!!!!!!!!!COLOR- downRightNeighbourColor" + downRightNeighbourColor);
+
+
+
+            Hex downNeighbour = hex.GetNeighbours()["downNeighbour"];
+            downNeighbourColor = getColor(downNeighbour);
+            Debug.Log("!!!!!!!!!!!!!!!!!COLOR- downNeighbourColor" + downNeighbourColor);
+
+
+            Hex downLeftNeighbour = hex.GetNeighbours()["downLeftNeighbour"];
+            downLeftNeighbourColor = getColor(downLeftNeighbour);
+            Debug.Log("!!!!!!!!!!!!!!!!!COLOR- downLeftNeighbourColor" + downLeftNeighbourColor);
+
+            Hex upLeftNeighbour = hex.GetNeighbours()["upLeftNeighbour"];
+            upLeftNeighbourColor = getColor(upLeftNeighbour);
+            Debug.Log("!!!!!!!!!!!!!!!!!COLOR- upLeftNeighbourColor" + upLeftNeighbourColor);
+
+            Hex upNeighbour = hex.GetNeighbours()["upNeighbour"];
+            upNeighbourColor = getColor(upNeighbour);
+            Debug.Log("!!!!!!!!!!!!!!!!!COLOR- upNeighbourColor" + upNeighbourColor);
+
+
+
+
+
+            if (hexColor == upNeighbourColor && hexColor == upRightNeighbourColor)
+            {
+                explosiveList.Add(hex);
+                explosiveList.Add(hex.neighbours["upNeighbour"]);
+                explosiveList.Add(hex.neighbours["upRightNeighbour"]);
+
+
+                // Debug.Log("HEELLELE");
+                //destroy
+            }
+            else if (hexColor == upRightNeighbourColor && hexColor == downRightNeighbourColor)
+            {
+
+            }
+            else if (hexColor == downRightNeighbourColor && hexColor == downNeighbourColor)
+            {
+
+            }
+            else if (hexColor == downNeighbourColor && hexColor == downLeftNeighbourColor)
+            {
+
+            }
+            else if (hexColor == downLeftNeighbourColor && hexColor == upLeftNeighbourColor)
+            {
+
+            }
+            else if (hexColor == upLeftNeighbourColor && hexColor == upNeighbourColor)
+            {
+
+            }
+        }
+
+
+
+        return explosiveList;
+    }
+    public static Color getColor(Hex hex)
+    {
+        Color color;
+        if (hex != null)
+        {
+            MeshRenderer mr = hex.GetComponentInChildren<MeshRenderer>();
+            color = mr.material.color;
+        }
+        else
+        {
+            //TODO: null kontrolunu yukarıda yap
+            color = Color.black;
+        }
+
+        return color;
     }
 
 }
