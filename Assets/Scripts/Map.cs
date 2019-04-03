@@ -5,9 +5,9 @@ using UnityEngine;
 public class Map : MonoBehaviour
 {
     public GameObject hexPrefab;
-    public int width = 9;
-    public int height = 8;
-    float xOffset = 0.879f;
+    public int width = 8;
+    public int height = 9;
+    float xOffset = 0.979f;
     float yOffset = 0.764f;
     public static List<Hex> hexagonList = new List<Hex>();
     public int colorCount = 5;
@@ -34,9 +34,9 @@ public class Map : MonoBehaviour
         addColorToList(color4);
         addColorToList(color5);
 
-        for (int x = 0; x < width; x++)
+        for (int x = 0; x < height; x++)
         {
-            for (int y = 0; y < height; y++)
+            for (int y = 0; y < width; y++)
             {
                 float xPos = x;
                 if (y % 2 == 0)
@@ -52,7 +52,7 @@ public class Map : MonoBehaviour
                 hexGO.GetComponent<Hex>().y = y;
                 hexGO.transform.SetParent(this.transform);
                 hexGO.isStatic = true;
-                Color color = colorList[Random.Range(1, colorList.Count)];
+                Color color = colorList[Random.Range(0, colorList.Count)];
                 //Color color = Random.ColorHSV(0f, 1f, 1f, 1f, 0.5f, 1f);
 
                 hexGO.transform.GetChild(0).GetComponent<MeshRenderer>().material.color = color;  //hex

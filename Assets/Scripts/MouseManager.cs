@@ -2,18 +2,23 @@
 using UnityEngine;
 using UnityEngine.EventSystems;
 using System.Collections.Generic;
+using UnityEngine.UI;
 
 public class MouseManager : MonoBehaviour
 {
+    public Text score;
+    //public GameObject gameOver;
+    public GameObject gameOverPanel;
+
     public GameObject MSelection;
     private List<Hex> selectedGroup;
     private Hex selectedHexagon;
     private GameObject cloneHex;
-    private GameObject cloneMarks;
-    private List<GameObject> cloneMarksList = new List<GameObject>();
-
+    private GameObject cloneMarkedHex;
+    private List<GameObject> cloneMarkedHexList = new List<GameObject>();
+    private int gameScore = 0;
     private static List<Hex> hexagonList;
-
+    private int mouseClick = 0;
     void Start()
     {
         selectedGroup = new List<Hex>();
@@ -38,25 +43,20 @@ public class MouseManager : MonoBehaviour
 
     void MouseOver_Hex(Hex hitObject)
     {
-        GameObject obj = GameObject.Find("Map"); //go Map script is attached to
-        Map mapInstance = obj.GetComponent<Map>();
-        int mapHeight = mapInstance.height;
-        int mapWidth = mapInstance.width;
-
         if (Input.GetMouseButtonDown(0))
         {
-
-            //TODO: deselction errors
+            //Debug.Log("Hitted: " + hitObject.x + hitObject.y);
             deseceltObjects();
             selectedGroup.Clear();
             selectionRule(hitObject);
             markSelectedObjects();
 
+            mouseClick = mouseClick + 1;
+            checkGameOver();
         }
         if (Input.GetMouseButtonUp(1))  //right click starts rotation
         {
             StartCoroutine(Rotation());
-
         }
     }
     void markSelectedObjects()
@@ -66,38 +66,27 @@ public class MouseManager : MonoBehaviour
             if (markedHex != null)
             {
                 MeshRenderer mr2 = markedHex.GetComponentInChildren<MeshRenderer>();
-                cloneMarks = Instantiate(MSelection, mr2.bounds.center, Quaternion.identity);
-                cloneMarksList.Add(cloneMarks);
-
-
+                cloneMarkedHex = Instantiate(MSelection, mr2.bounds.center, Quaternion.identity);
+                cloneMarkedHexList.Add(cloneMarkedHex);
             }
         }
     }
     private void deseceltObjects()
     {
-        if (cloneMarks != null && cloneMarks.transform.childCount > 0)
+        if (cloneMarkedHex != null && cloneMarkedHex.transform.childCount > 0)
         {
-            Debug.Log("cccccccccccccccccccccccccccccccccccccccccccccccccccccccccccc " + cloneMarks.transform.childCount);
-
-            for (int i = 0; i < cloneMarksList.Count; ++i)
+            for (int i = 0; i < cloneMarkedHexList.Count; ++i)
             {
-                Destroy(cloneMarksList[i]);
-
+                Destroy(cloneMarkedHexList[i]);
             }
-
-            // foreach (Transform child in cloneMarks.transform)
-            // {
-            //     Destroy(child.gameObject);
-            // }
         }
     }
-
     void selectionRule(Hex hitObject)
     {
         GameObject obj = GameObject.Find("Map"); //go Map script is attached to
         Map mapInstance = obj.GetComponent<Map>();
-        int mapHeight = mapInstance.width;//9
-        int mapWidth = mapInstance.height;//8
+        int mapHeight = mapInstance.height;//9
+        int mapWidth = mapInstance.width;//8
         string pos = "";
 
         if (hitObject.x == mapHeight - 1 && hitObject.y == mapWidth - 1) //topright corner
@@ -134,50 +123,43 @@ public class MouseManager : MonoBehaviour
         }
         setSelectionPositions(pos, hitObject);
     }
-
     void setSelectionPositions(string pos, Hex hitObject)
     {
         if (pos == "pos1")
         {
-            Debug.Log("pos1");
             selectedGroup.Add(hitObject);
-            selectedGroup.Add(hitObject.GetComponent<Hex>().GetNeighbours()["upNeighbour"]);
-            selectedGroup.Add(hitObject.GetComponent<Hex>().GetNeighbours()["upRightNeighbour"]);
+            selectedGroup.Add(hitObject.GetComponent<Hex>().GetNeighbors()["upNeighbor"]);
+            selectedGroup.Add(hitObject.GetComponent<Hex>().GetNeighbors()["upRightNeighbor"]);
         }
         else if (pos == "pos2")
         {
             selectedGroup.Add(hitObject);
-            selectedGroup.Add(hitObject.GetComponent<Hex>().GetNeighbours()["upRightNeighbour"]);
-            selectedGroup.Add(hitObject.GetComponent<Hex>().GetNeighbours()["downRightNeighbour"]);
-            Debug.Log("pos2");
+            selectedGroup.Add(hitObject.GetComponent<Hex>().GetNeighbors()["upRightNeighbor"]);
+            selectedGroup.Add(hitObject.GetComponent<Hex>().GetNeighbors()["downRightNeighbor"]);
         }
         else if (pos == "pos3")
         {
             selectedGroup.Add(hitObject);
-            selectedGroup.Add(hitObject.GetComponent<Hex>().GetNeighbours()["downRightNeighbour"]);
-            selectedGroup.Add(hitObject.GetComponent<Hex>().GetNeighbours()["downNeighbour"]);
-            Debug.Log("pos3");
+            selectedGroup.Add(hitObject.GetComponent<Hex>().GetNeighbors()["downRightNeighbor"]);
+            selectedGroup.Add(hitObject.GetComponent<Hex>().GetNeighbors()["downNeighbor"]);
         }
         else if (pos == "pos4")
         {
             selectedGroup.Add(hitObject);
-            selectedGroup.Add(hitObject.GetComponent<Hex>().GetNeighbours()["downNeighbour"]);
-            selectedGroup.Add(hitObject.GetComponent<Hex>().GetNeighbours()["downLeftNeighbour"]);
-            Debug.Log("pos4");
+            selectedGroup.Add(hitObject.GetComponent<Hex>().GetNeighbors()["downNeighbor"]);
+            selectedGroup.Add(hitObject.GetComponent<Hex>().GetNeighbors()["downLeftNeighbor"]);
         }
         else if (pos == "pos5")
         {
             selectedGroup.Add(hitObject);
-            selectedGroup.Add(hitObject.GetComponent<Hex>().GetNeighbours()["downLeftNeighbour"]);
-            selectedGroup.Add(hitObject.GetComponent<Hex>().GetNeighbours()["upLeftNeighbour"]);
-            Debug.Log("pos5");
+            selectedGroup.Add(hitObject.GetComponent<Hex>().GetNeighbors()["downLeftNeighbor"]);
+            selectedGroup.Add(hitObject.GetComponent<Hex>().GetNeighbors()["upLeftNeighbor"]);
         }
         else if (pos == "pos6")
         {
             selectedGroup.Add(hitObject);
-            selectedGroup.Add(hitObject.GetComponent<Hex>().GetNeighbours()["upLeftNeighbour"]);
-            selectedGroup.Add(hitObject.GetComponent<Hex>().GetNeighbours()["upNeighbour"]);
-            Debug.Log("pos6");
+            selectedGroup.Add(hitObject.GetComponent<Hex>().GetNeighbors()["upLeftNeighbor"]);
+            selectedGroup.Add(hitObject.GetComponent<Hex>().GetNeighbors()["upNeighbor"]);
         }
     }
 
@@ -188,16 +170,28 @@ public class MouseManager : MonoBehaviour
         {
             swapHexagons();
             yield return new WaitForSeconds(0.1f);  //wait untill swapping completed.
-            //matchedHexagons = checkExplosion(selectedGroup);  //now it checks only selected group. //TODO: Modify for all hexs.
-            // if (matchedHexagons.Count > 0)
-            // {
-            //     break; //stop if there is explosion
-            // }
+            matchedHexagons = checkExplosion(selectedGroup[i]);  //now it checks only selected group. //TODO: Modify for all hexs.
+
+            if (matchedHexagons.Count == 3)
+            {
+                for (int j = 0; j < 3; ++j)
+                {
+                    Destroy(matchedHexagons[j]);
+                    deseceltObjects();  //deselect when object destroyed
+                    gameScore = gameScore + 10;
+                    Debug.Log("scorree" + gameScore);
+                    score.text = gameScore.ToString();
+
+
+                }
+            }
+
+            if (matchedHexagons.Count > 0)
+            {
+                break; //stop if there is explosion
+            }
         }
     }
-
-
-
     private void swapHexagons()
     {
         Hex firstHex, secondHex, thirdHex;
@@ -211,99 +205,75 @@ public class MouseManager : MonoBehaviour
         pos2 = secondHex.transform.position;
         pos3 = thirdHex.transform.position;
 
-        Debug.Log("pos1: " + pos1);
-        Debug.Log("pos2: " + pos2);
-        Debug.Log("pos3: " + pos3);
-
         firstHex.transform.position = pos2;
         secondHex.transform.position = pos3;
         thirdHex.transform.position = pos1;
 
-        Debug.Log("Cpos1: " + pos1);
-        Debug.Log("Cpos2: " + pos2);
-        Debug.Log("Cpos3: " + pos3);
     }
 
 
-    public static List<GameObject> checkExplosion(List<Hex> hexagonList)
+    public static List<GameObject> checkExplosion(Hex hex)
     {
         List<GameObject> explosiveList = new List<GameObject>();
-        Color hexColor, upRightNeighbourColor, downRightNeighbourColor, downNeighbourColor, downLeftNeighbourColor, upLeftNeighbourColor, upNeighbourColor;
+        Color hexColor, upRightNeighborColor, downRightNeighborColor, downNeighborColor, downLeftNeighborColor, upLeftNeighborColor, upNeighborColor;
 
-        for (int i = 0; i < hexagonList.Count; ++i)
+        hexColor = getColor(hex);
+
+        Hex upRightNeighbor = hex.GetNeighbors()["upRightNeighbor"];
+        upRightNeighborColor = getColor(upRightNeighbor);
+
+        Hex downRightNeighbor = hex.GetNeighbors()["downRightNeighbor"];
+        downRightNeighborColor = getColor(downRightNeighbor);
+
+        Hex downNeighbor = hex.GetNeighbors()["downNeighbor"];
+        downNeighborColor = getColor(downNeighbor);
+
+        Hex downLeftNeighbor = hex.GetNeighbors()["downLeftNeighbor"];
+        downLeftNeighborColor = getColor(downLeftNeighbor);
+
+        Hex upLeftNeighbor = hex.GetNeighbors()["upLeftNeighbor"];
+        upLeftNeighborColor = getColor(upLeftNeighbor);
+
+        Hex upNeighbor = hex.GetNeighbors()["upNeighbor"];
+        upNeighborColor = getColor(upNeighbor);
+
+        if (hexColor == upNeighborColor && hexColor == upRightNeighborColor)//hexColor == upNeighborColor && hexColor == upRightNeighborColor
         {
-            Hex hex = hexagonList[i];
-            hexColor = getColor(hexagonList[i]);
-            Debug.Log("!!!!!!!!!!!!!!!!!COLOR- hexColor" + hexColor);
-
-            Hex upRightNeighbour = hex.GetNeighbours()["upRightNeighbour"];
-            upRightNeighbourColor = getColor(upRightNeighbour);
-            Debug.Log("!!!!!!!!!!!!!!!!!COLOR- upRightNeighbourColor" + upRightNeighbourColor);
-
-            Hex downRightNeighbour = hex.GetNeighbours()["downRightNeighbour"];
-            downRightNeighbourColor = getColor(downRightNeighbour);
-            Debug.Log("!!!!!!!!!!!!!!!!!COLOR- downRightNeighbourColor" + downRightNeighbourColor);
-
-            Hex downNeighbour = hex.GetNeighbours()["downNeighbour"];
-            downNeighbourColor = getColor(downNeighbour);
-            Debug.Log("!!!!!!!!!!!!!!!!!COLOR- downNeighbourColor" + downNeighbourColor);
-
-            Hex downLeftNeighbour = hex.GetNeighbours()["downLeftNeighbour"];
-            downLeftNeighbourColor = getColor(downLeftNeighbour);
-            Debug.Log("!!!!!!!!!!!!!!!!!COLOR- downLeftNeighbourColor" + downLeftNeighbourColor);
-
-            Hex upLeftNeighbour = hex.GetNeighbours()["upLeftNeighbour"];
-            upLeftNeighbourColor = getColor(upLeftNeighbour);
-            Debug.Log("!!!!!!!!!!!!!!!!!COLOR- upLeftNeighbourColor" + upLeftNeighbourColor);
-
-            Hex upNeighbour = hex.GetNeighbours()["upNeighbour"];
-            upNeighbourColor = getColor(upNeighbour);
-            Debug.Log("!!!!!!!!!!!!!!!!!COLOR- upNeighbourColor" + upNeighbourColor);
-
-
-
-
-            if (hexColor == upNeighbourColor && hexColor == upRightNeighbourColor)//hexColor == upNeighbourColor && hexColor == upRightNeighbourColor
-            {
-                GameObject other = GameObject.Find("Hex_" + upNeighbour.x + "_" + upNeighbour.y);
-
-                explosiveList.Add(GameObject.Find("Hex_" + hex.x + "_" + hex.y));
-                explosiveList.Add(GameObject.Find("Hex_" + upNeighbour.x + "_" + upNeighbour.y));
-                explosiveList.Add(GameObject.Find("Hex_" + upRightNeighbour.x + "_" + upRightNeighbour.y));
-                Destroy(explosiveList[0]);
-                Destroy(explosiveList[1]);
-                Destroy(explosiveList[2]);
-
-            }
-            else if (hexColor == upRightNeighbourColor && hexColor == downRightNeighbourColor)
-            {
-                GameObject other = GameObject.Find("Hex_" + upNeighbour.x + "_" + upNeighbour.y);
-
-                explosiveList.Add(GameObject.Find("Hex_" + hex.x + "_" + hex.y));
-                explosiveList.Add(GameObject.Find("Hex_" + upNeighbour.x + "_" + upNeighbour.y));
-                explosiveList.Add(GameObject.Find("Hex_" + upRightNeighbour.x + "_" + upRightNeighbour.y));
-                Destroy(explosiveList[0]);
-                Destroy(explosiveList[1]);
-                Destroy(explosiveList[2]);
-
-            }
-            else if (hexColor == downRightNeighbourColor && hexColor == downNeighbourColor)
-            {
-
-            }
-            else if (hexColor == downNeighbourColor && hexColor == downLeftNeighbourColor)
-            {
-
-            }
-            else if (hexColor == downLeftNeighbourColor && hexColor == upLeftNeighbourColor)
-            {
-
-            }
-            else if (hexColor == upLeftNeighbourColor && hexColor == upNeighbourColor)
-            {
-
-            }
+            explosiveList.Add(GameObject.Find("Hex_" + hex.x + "_" + hex.y));
+            explosiveList.Add(GameObject.Find("Hex_" + upNeighbor.x + "_" + upNeighbor.y));
+            explosiveList.Add(GameObject.Find("Hex_" + upRightNeighbor.x + "_" + upRightNeighbor.y));
         }
+        else if (hexColor == upRightNeighborColor && hexColor == downRightNeighborColor)
+        {
+            explosiveList.Add(GameObject.Find("Hex_" + hex.x + "_" + hex.y));
+            explosiveList.Add(GameObject.Find("Hex_" + upRightNeighbor.x + "_" + upRightNeighbor.y));
+            explosiveList.Add(GameObject.Find("Hex_" + downRightNeighbor.x + "_" + downRightNeighbor.y));
+        }
+        else if (hexColor == downRightNeighborColor && hexColor == downNeighborColor)
+        {
+            explosiveList.Add(GameObject.Find("Hex_" + hex.x + "_" + hex.y));
+            explosiveList.Add(GameObject.Find("Hex_" + downRightNeighbor.x + "_" + downRightNeighbor.y));
+            explosiveList.Add(GameObject.Find("Hex_" + downNeighbor.x + "_" + downNeighbor.y));
+        }
+        else if (hexColor == downNeighborColor && hexColor == downLeftNeighborColor)
+        {
+            explosiveList.Add(GameObject.Find("Hex_" + hex.x + "_" + hex.y));
+            explosiveList.Add(GameObject.Find("Hex_" + downNeighbor.x + "_" + downNeighbor.y));
+            explosiveList.Add(GameObject.Find("Hex_" + downLeftNeighbor.x + "_" + downLeftNeighbor.y));
+        }
+        else if (hexColor == downLeftNeighborColor && hexColor == upLeftNeighborColor)
+        {
+            explosiveList.Add(GameObject.Find("Hex_" + hex.x + "_" + hex.y));
+            explosiveList.Add(GameObject.Find("Hex_" + downLeftNeighbor.x + "_" + downLeftNeighbor.y));
+            explosiveList.Add(GameObject.Find("Hex_" + upLeftNeighbor.x + "_" + upLeftNeighbor.y));
+        }
+        else if (hexColor == upLeftNeighborColor && hexColor == upNeighborColor)
+        {
+            explosiveList.Add(GameObject.Find("Hex_" + hex.x + "_" + hex.y));
+            explosiveList.Add(GameObject.Find("Hex_" + upLeftNeighbor.x + "_" + upLeftNeighbor.y));
+            explosiveList.Add(GameObject.Find("Hex_" + upNeighbor.x + "_" + upNeighbor.y));
+        }
+
         return explosiveList;
     }
     public static Color getColor(Hex hex)
@@ -316,11 +286,18 @@ public class MouseManager : MonoBehaviour
         }
         else
         {
-            //TODO: null kontrolunu yukarıda yap
             color = Color.black;
         }
 
         return color;
+    }
+
+    public void checkGameOver()
+    {
+        if (mouseClick >= 10)
+        {
+            gameOverPanel.SetActive(true);
+        }
     }
 
 }

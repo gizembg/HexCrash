@@ -9,65 +9,52 @@ public class Hex : MonoBehaviour
     public int y;
     public Color color;
     public float distance;
-    public GameObject cube;
-    public IDictionary<string, Hex> neighbours;
-    public IDictionary<string, Hex> GetNeighbours() //    public Hex[] GetNeighbours()
+    public IDictionary<string, Hex> neighbors;
+    public IDictionary<string, Hex> GetNeighbors() //    public Hex[] GetNeighbors()
     {
         //to reach non-static object drom another script
         GameObject obj = GameObject.Find("Map"); //go Map script is attached to
         Map mapInstance = obj.GetComponent<Map>();
-        int mapHeight = mapInstance.width;
-        int mapWidth = mapInstance.height;
+        int mapHeight = mapInstance.height;
+        int mapWidth = mapInstance.width;
+        neighbors = new Dictionary<string, Hex>();
 
-        neighbours = new Dictionary<string, Hex>();
+        Hex downNeighbor = x == 0 ? null : GameObject.Find("Hex_" + (x - 1) + "_" + y).GetComponent<Hex>();
+        neighbors.Add("downNeighbor", downNeighbor);
 
-        Hex downNeighbour = x == 0 ? null : GameObject.Find("Hex_" + (x - 1) + "_" + y).GetComponent<Hex>();
-        Debug.Log("downNeighbour: " + downNeighbour);
-        neighbours.Add("downNeighbour", downNeighbour);
-
-        Hex upNeighbour = x >= mapHeight - 1 ? null : GameObject.Find("Hex_" + (x + 1) + "_" + y).GetComponent<Hex>();
-        Debug.Log("upNeighbour: " + upNeighbour);
-        neighbours.Add("upNeighbour", upNeighbour);
+        Hex upNeighbor = x >= mapHeight - 1 ? null : GameObject.Find("Hex_" + (x + 1) + "_" + y).GetComponent<Hex>();
+        neighbors.Add("upNeighbor", upNeighbor);
 
         if (y % 2 == 1)//if y odd number
         {
-            Hex downLeftNeighbour = x == 0 ? null : GameObject.Find("Hex_" + (x - 1) + "_" + (y - 1)).GetComponent<Hex>();
-            Debug.Log("downLeftNeighbour: " + downLeftNeighbour);
-            neighbours.Add("downLeftNeighbour", downLeftNeighbour);
-
-            Hex downRightNeighbour = x == 0 || y >= mapWidth - 1 ? null : GameObject.Find("Hex_" + (x - 1) + "_" + (y + 1)).GetComponent<Hex>();
-            Debug.Log("downRightNeighbour: " + downRightNeighbour);
-            neighbours.Add("downRightNeighbour", downRightNeighbour);
-
-            Hex upLeftNeighbour = y >= mapHeight - 1 ? null : GameObject.Find("Hex_" + (x) + "_" + (y - 1)).GetComponent<Hex>();
-            Debug.Log("upLeftNeighbour: " + upLeftNeighbour);
-            neighbours.Add("upLeftNeighbour", upLeftNeighbour);
-
-            Hex upRightNeighbour = x >= mapHeight - 1 || y >= mapWidth - 1 ? null : GameObject.Find("Hex_" + (x) + "_" + (y + 1)).GetComponent<Hex>();
-            Debug.Log("upRightNeighbour: " + upRightNeighbour);
-            neighbours.Add("upRightNeighbour", upRightNeighbour);
+            Hex downLeftNeighbor = x == 0 ? null : GameObject.Find("Hex_" + (x - 1) + "_" + (y - 1)).GetComponent<Hex>();
+            neighbors.Add("downLeftNeighbor", downLeftNeighbor);
+            Hex downRightNeighbor = x == 0 || y >= mapWidth - 1? null : GameObject.Find("Hex_" + (x - 1) + "_" + (y + 1)).GetComponent<Hex>();
+            neighbors.Add("downRightNeighbor", downRightNeighbor);
+            Hex upLeftNeighbor = y >= mapHeight - 1? null : GameObject.Find("Hex_" + (x) + "_" + (y - 1)).GetComponent<Hex>();
+            neighbors.Add("upLeftNeighbor", upLeftNeighbor);
+            Hex upRightNeighbor = x >= mapHeight - 1 || y >= mapWidth - 1? null : GameObject.Find("Hex_" + (x) + "_" + (y + 1)).GetComponent<Hex>();
+            neighbors.Add("upRightNeighbor", upRightNeighbor);
 
         }
         else
         {
-            Hex downLeftNeighbour = y == 0 || x == 0 ? null : GameObject.Find("Hex_" + (x) + "_" + (y - 1)).GetComponent<Hex>();
-            Debug.Log("downLeftNeighbour: " + downLeftNeighbour);
-            neighbours.Add("downLeftNeighbour", downLeftNeighbour);
+            Hex downLeftNeighbor = y == 0 || x == 0 ? null : GameObject.Find("Hex_" + (x) + "_" + (y - 1)).GetComponent<Hex>();
+            //Debug.Log("downLeftNeighbor: " + downLeftNeighbor);
+            neighbors.Add("downLeftNeighbor", downLeftNeighbor);
 
-            Hex downRightNeighbour = GameObject.Find("Hex_" + (x) + "_" + (y + 1)).GetComponent<Hex>();
-            Debug.Log("downRightNeighbour: " + downRightNeighbour);
-            neighbours.Add("downRightNeighbour", downRightNeighbour);
+            Hex downRightNeighbor = GameObject.Find("Hex_" + (x) + "_" + (y + 1)).GetComponent<Hex>();
+            //Debug.Log("downRightNeighbor: " + downRightNeighbor);
+            neighbors.Add("downRightNeighbor", downRightNeighbor);
 
-            Hex upLeftNeighbour = x >= mapHeight - 1 || y == 0 ? null : GameObject.Find("Hex_" + (x + 1) + "_" + (y - 1)).GetComponent<Hex>();
-            Debug.Log("upLeftNeighbour: " + upLeftNeighbour);
-            neighbours.Add("upLeftNeighbour", upLeftNeighbour);
+            Hex upLeftNeighbor = x >= mapHeight - 1 || y == 0 ? null : GameObject.Find("Hex_" + (x + 1) + "_" + (y - 1)).GetComponent<Hex>();
+            neighbors.Add("upLeftNeighbor", upLeftNeighbor);
 
-            Hex upRightNeighbour = x >= mapHeight - 1 ? null : GameObject.Find("Hex_" + (x + 1) + "_" + (y + 1)).GetComponent<Hex>();
-            Debug.Log("upRightNeighbour: " + upRightNeighbour);
-            neighbours.Add("upRightNeighbour", upRightNeighbour);
+            Hex upRightNeighbor = x >= mapHeight - 1 || GameObject.Find("Hex_" + (x + 1) + "_" + (y + 1)).GetComponent<Hex>() == null ? null : GameObject.Find("Hex_" + (x + 1) + "_" + (y + 1)).GetComponent<Hex>();
+            neighbors.Add("upRightNeighbor", upRightNeighbor);
         }
 
-        return neighbours;
+        return neighbors;
     }
 
 }
